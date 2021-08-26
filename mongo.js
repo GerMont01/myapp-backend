@@ -20,7 +20,7 @@ class db {
         let db = await this.MongoClient.connect(this.url)
         let dbo = db.db("UserDB");
 
-        if (await dbo.collection("Users").findOne(cred)){
+        if (await dbo.collection("Users").findOne({email:cred.email})){
             console.log('User already exists')
         } else {
             try {

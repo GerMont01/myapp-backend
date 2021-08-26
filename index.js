@@ -18,7 +18,10 @@ app.use(cookieParser());
 app.use(session({
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false },
+    cookie: { 
+        secure: false,
+        maxAge: 1000* 60 * 60 *24 * 365 
+    },
     secret: '1232abbc1a23123f123e123a'
 }));
 
@@ -33,7 +36,7 @@ app.post('/login', (req,res,next) => {
         if (user){
             req.session.user = cred;
             console.log(req.session)
-            res.json('logged in')
+            res.json(true)
         } else {
             res.json('Invalid credentials')
         }
@@ -47,7 +50,7 @@ app.post('/signup', (req,res,next) => {
         if (await mongo.db.registerUser(cred)){
             req.session.user = cred;
             console.log(req.session)
-            res.json('signup successful')
+            res.json(true)
         } else {
             res.json('Invalid credentials') 
         }
@@ -59,11 +62,16 @@ app.post('/signup', (req,res,next) => {
     }
 })
 
+app.get('/logout', (req,res,next) => {
+    req.session.destroy(()=>{
+        res.json('logged out')
+    })
+})
 
 app.get('/api', (req,res,next) => {
     console.log(req.session)
     if(req.session.user){
-        res.json(req.session.user.email)
+        res.json(true)
     } else {
         res.json('not logged in')
     }
