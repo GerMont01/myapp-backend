@@ -7,7 +7,7 @@ class db {
     createNewCollection(collectionName) {
         this.MongoClient.connect(this.url, function(err, db) {
                 if (err) console.log(err);
-                var dbo = db.db("UserDB");
+                var dbo = db.db("RestaurantDB");
                 dbo.createCollection(collectionName, function(err, res) {
                     if (err) console.log(err);
                     console.log("Collection created!");
@@ -18,7 +18,7 @@ class db {
 
     async registerUser(cred) {
         let db = await this.MongoClient.connect(this.url)
-        let dbo = db.db("UserDB");
+        let dbo = db.db("RestaurantDB");
 
         if (await dbo.collection("Users").findOne({email:cred.email})){
             console.log('User already exists')
@@ -39,7 +39,7 @@ class db {
 
     async loginUser(cred) {
         let db = await this.MongoClient.connect(this.url)
-        let dbo = db.db("UserDB");
+        let dbo = db.db("RestaurantDB");
         try {
             let result = await dbo.collection("Users").findOne(cred);
             await db.close;
@@ -53,7 +53,7 @@ class db {
 
     async updateUser(query,newvalue) {
         let db = await this.MongoClient.connect(this.url)
-        let dbo = db.db("UserDB");
+        let dbo = db.db("RestaurantDB");
         try {
             let myquery = query;
             let newvalues = { $set: newvalue };

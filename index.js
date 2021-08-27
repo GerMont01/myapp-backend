@@ -7,6 +7,7 @@ const mongo = require('./mongo')
 
 mongo.db.createNewCollection('Users')
 mongo.db.createNewCollection('Admin')
+mongo.db.createNewCollection('Reservations')
 
 const app = express();
 
@@ -46,7 +47,7 @@ app.post('/login', (req,res,next) => {
 
 app.post('/signup', (req,res,next) => {
     async function signup(){
-        let cred = { email: req.body.email, username:req.body.username, password: req.body.password };
+        let cred = { email: req.body.email, firstname:req.body.firstname, lastname:req.body.lastname, password: req.body.password };
         if (await mongo.db.registerUser(cred)){
             req.session.user = cred;
             console.log(req.session)
@@ -118,5 +119,8 @@ app.get('/api', (req,res,next) => {
     }
 })
 
+app.post('/reserve', (req,res,next) => {
+    
+})
 
 app.listen(3001);
