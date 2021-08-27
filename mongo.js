@@ -21,13 +21,13 @@ class db {
         let dbo = db.db("RestaurantDB");
 
         if (await dbo.collection("Users").findOne({email:cred.email})){
-            console.log('User already exists')
+            return false
         } else {
             try {
-                let res = await dbo.collection("Users").insertOne(cred)
+                await dbo.collection("Users").insertOne(cred)
                 console.log("User Registered");
                 await db.close();
-                return res
+                return true
             } catch (err) {
                 console.log(err);
                 db.close(); 
@@ -66,6 +66,27 @@ class db {
             db.close;
             return false
         }
+    }
+
+    async reserve(reservation) {
+        let db = await this.MongoClient.connect(this.url)
+        let dbo = db.db("RestaurantDB");
+
+        if (await dbo.collection("Reservations").findOne({numOfPeople:reservation.numOfPeople, time:reservation.time})){
+            console.log('Tables unavailable at that time')
+        } else {
+            try {
+                let res = await dbo.collection("Reservations").insertOne(reservation)
+                console.log("Reservation Registered");
+                await db.close();
+                return res
+            } catch (err) {
+                console.log(err);
+                db.close(); 
+                return false
+            }
+        }
+
     }
 }
 

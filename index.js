@@ -35,7 +35,7 @@ app.post('/login', (req,res,next) => {
         let cred = { email: req.body.email, password: req.body.password };
         let user = await mongo.db.loginUser(cred)
         if (user){
-            req.session.user = cred;
+            req.session.user = user;
             console.log(req.session)
             res.json(true)
         } else {
@@ -120,7 +120,20 @@ app.get('/api', (req,res,next) => {
 })
 
 app.post('/reserve', (req,res,next) => {
-    
+    async function reserve(){
+        let reservation = { 
+            email:req.session.user.email,
+            name:`${req.session.user.lastname}, ${req.session.user.firstname}`,
+            numOfPeople: req.body.numOfPeople,
+            time: req.body.time
+        };
+        if (await mongo.db.reserve(reservation)){
+            res.json(reservation)
+        } else {
+            res.json(false) 
+        }
+    }
+    reserve();
 })
 
 app.listen(3001);
