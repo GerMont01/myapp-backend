@@ -44,8 +44,25 @@ class db {
             let result = await dbo.collection("Users").findOne(cred);
             await db.close;
             return result;
-        } catch {
+        } catch(err) {
             console.log(err);
+            db.close;
+            return false
+        }
+    }
+
+    async updateUser(query,newvalue) {
+        let db = await this.MongoClient.connect(this.url)
+        let dbo = db.db("UserDB");
+        try {
+            let myquery = query;
+            let newvalues = { $set: newvalue };
+            let res = await dbo.collection("Users").updateOne(myquery, newvalues)
+            console.log(res);
+            await db.close();
+            return true;
+        } catch(err) {
+            console.log(err)
             db.close;
             return false
         }

@@ -11,8 +11,8 @@
     "multer": "^1.4.3",
     "nodemon": "^2.0.12"
   },
-  "name": "myapp",
-  "description": "\"# myapp-meta\"",
+  "name": "myapp-backend",
+  "description": "\"# myapp-backend\"",
   "version": "1.0.0",
   "main": "index.js",
   "devDependencies": {},

@@ -62,6 +62,47 @@ app.post('/signup', (req,res,next) => {
     }
 })
 
+let emailForPasswordChange = undefined;
+
+app.post('/forgotpassword', (req,res,next) => {
+
+    async function findEmail(){
+        let cred = { email: req.body.email };
+        user = await mongo.db.loginUser(cred)
+        if (user){
+            if (req.body.code === 'CODE') {
+                emailForPasswordChange = user.email;
+               res.json(true) 
+            } else {
+                res.json('Invalid code')
+            }
+            
+        } else {
+            res.json('User not found')
+        }
+    }
+    findEmail()
+})
+
+app.post('/changepassword', (req,res,next) => {
+
+    async function changePassword(){
+        let cred = { email: emailForPasswordChange };
+        if (await mongo.db.updateUser(cred, { password:req.body.password })){
+            emailForPasswordChange = undefined;
+            res.json(true) 
+        } else {
+            emailForPasswordChange = undefined;
+            res.json('password could not be changed')
+        }
+    }
+    if (req.body.password === req.body.password2){
+        changePassword() 
+     } else {
+         res.json("Passwords don't match") 
+     }
+})
+
 app.get('/logout', (req,res,next) => {
     req.session.destroy(()=>{
         res.json('logged out')
